@@ -1,33 +1,35 @@
+
+<%%- model_class = <%= singular_table_name.to_s.titleize.split(" ").join.to_s.constantize %> %>
 <div class="page-header">
+  <%%= link_to new_<%= prefixed_plain_model_url %>_path, :class => 'btn btn-primary' do %>
+    <span class="glyphicon glyphicon-plus"></span>
+    New <%= human_name %>
+  <%% end %>
   <h1>Listing <%= plural_table_name %></h1>
 </div>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-<% attributes.reject(&:password_digest?).each do |attribute| -%>
-      <th><%= attribute.human_name %></th>
-<% end -%>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <%% @<%= plural_table_name %>.each do |<%= singular_table_name %>| %>
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
       <tr>
-<% attributes.reject(&:password_digest?).each do |attribute| -%>
-        <td><%%= <%= singular_table_name %>.<%= attribute.name %> %></td>
-<% end -%>
-        <td><%%= link_to 'Show', <%= "[:#{prefix}, #{singular_table_name}]" %>, class: 'btn btn-default btn-xs' %></td>
-        <td><%%= link_to 'Edit', edit_<%= prefixed_plain_model_url %>_path(<%= singular_table_name %>), class: 'btn btn-default btn-xs' %></td>
-        <td><%%= link_to 'Destroy', <%= "[:#{prefix}, #{singular_table_name}]" %>, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-xs btn-danger' %></td>
+    <% attributes.each do |attribute| -%>
+        <th><%%= model_class.human_attribute_name "<%= attribute.name.to_s %>" %></th>
+    <% end -%>
+        <th></th>
+        <th></th>
+        <th></th>
       </tr>
-    <%% end %>
-  </tbody>
-</table>
+    </thead>
 
-<br>
-
-<%%= link_to 'New <%= human_name %>', new_<%= prefixed_plain_model_url %>_path, class: 'btn btn-primary' %>
+    <tbody>
+      <%%= content_tag_for(:tr, @<%= plural_table_name %>) do |<%= singular_table_name %>| %>
+    <% attributes.each do |attribute| -%>
+        <td><%%= <%= singular_table_name %>.<%= attribute.name %> %></td>
+    <% end -%>
+        <td><%%= link_to 'Show', <%=  "[:#{prefix}, #{singular_table_name}]"  %> %></td>
+        <td><%%= link_to 'Edit', edit_<%= prefixed_plain_model_url %>_path(<%= singular_table_name %>) %></td>
+        <td><%%= link_to 'Destroy', <%= "[:#{prefix}, #{singular_table_name}]" %>, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <%% end %>
+    </tbody>
+  </table>
+</div>
